@@ -6,7 +6,8 @@ class ItemsController < ApplicationController
   end
 
   def create
-    @item = Item.create(name: params[:name], description: params[:name], weight: params[:weight], price: params[:price], real: params[:real])
+    item_params = params.require(:item).permit(:name, :description, :weight, :price, :real)
+    @item = Item.create(item_params)
     render text: "#{@item.id}: #{@item.name} (#{!@item.new_record?})"
   end
 
