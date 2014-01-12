@@ -19,26 +19,37 @@ class ItemsController < ApplicationController
 
   # /items/1/edit GET
   def edit
+    @item = Item.find(params[:id])
   end
 
   # /items POST
   def create
-    item_params = params.require(:item).permit(:name, :description, :weight, :price, :real)
     @item = Item.create(item_params)
     if @item.errors.empty?
       redirect_to item_path(@item)
     else
       render "new"
     end
-    # render text: "#{@item.id}: #{@item.name} (#{!@item.new_record?})"
   end
 
   # /items/1 PUT + workaround POST
   def update
+    @item = Item.find(params[:id])
+    @item.update_attributes(item_params)
+    if @item.errors.empty?
+      redirect_to item_path(@item)
+    else
+      render "edit"
+    end
   end
 
   # /items/1 DELETE + workaround POST
   def destroy
+  end
+
+private
+  def item_params
+    params.require(:item).permit(:name, :description, :weight, :price, :real)
   end
 
 end
