@@ -14,6 +14,7 @@ class ItemsController < ApplicationController
 
   # /items/new GET
   def new
+    @item = Item.new
   end
 
   # /items/1/edit GET
@@ -24,7 +25,12 @@ class ItemsController < ApplicationController
   def create
     item_params = params.require(:item).permit(:name, :description, :weight, :price, :real)
     @item = Item.create(item_params)
-    render text: "#{@item.id}: #{@item.name} (#{!@item.new_record?})"
+    if @item.errors.empty?
+      redirect_to item_path(@item)
+    else
+      render "new"
+    end
+    # render text: "#{@item.id}: #{@item.name} (#{!@item.new_record?})"
   end
 
   # /items/1 PUT + workaround POST
