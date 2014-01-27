@@ -1,5 +1,8 @@
 class ItemsController < ApplicationController
 
+  before_filter :find_item, only: [:show, :edit, :update, :destroy]
+  before_filter :check_if_admin, only: [:edit, :update, :new, :create, :destroy]
+
   def index
     @items = Item.all
     # render text: @items.map { |i| "#{i.name}: #{i.price}"}.join("<br>")
@@ -7,7 +10,7 @@ class ItemsController < ApplicationController
 
   # /items/1 GET
   def show
-    unless @item = Item.where(id: params[:id]).first
+    unless @item
       render text: "404 Not found", status: 404
     end
   end
@@ -19,7 +22,6 @@ class ItemsController < ApplicationController
 
   # /items/1/edit GET
   def edit
-    @item = Item.find(params[:id])
   end
 
   # /items POST
@@ -34,7 +36,6 @@ class ItemsController < ApplicationController
 
   # /items/1 PUT + workaround POST
   def update
-    @item = Item.find(params[:id])
     @item.update_attributes(item_params)
     if @item.errors.empty?
       redirect_to item_path(@item)
@@ -45,7 +46,6 @@ class ItemsController < ApplicationController
 
   # /items/1 DELETE + workaround POST
   def destroy
-    @item = Item.find(params[:id])
     @item.destroy
     redirect_to action: "index"
   end
@@ -53,6 +53,14 @@ class ItemsController < ApplicationController
 private
   def item_params
     params.require(:item).permit(:name, :description, :weight, :price, :real)
+  end
+
+  def find_item
+    @item = Item.find(params[:id])
+  end
+
+  def check_if_admin
+    render text: "Access denied", status: 403 unless params[:admin]
   end
 
 end

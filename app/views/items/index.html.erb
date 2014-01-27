@@ -8,6 +8,7 @@
     <th>ID</th>
     <th>Name</th>
     <th>Price</th>
+    <th>Edit</th>
     <th>Delete</th>
   </tr>
 
@@ -16,6 +17,7 @@
       <td><%= i.id %></td>
       <td><%= link_to i.name, item_path(i) %></td>
       <td><%= i.price %></td>
+      <td><%= link_to "edit", edit_item_path(i) %></td>
       <td><%= link_to "delete #{i.id}", item_path(i), method: :delete, data: { confirm: "Are you sure?" } %></td>
     </tr>
   <% end %>
