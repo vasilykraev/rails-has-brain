@@ -1,4 +1,7 @@
 MyStore::Application.routes.draw do
   # get ':controller(/:action(/:id))'
-  resources :items
+  resources :items do
+    get :upvote, on: :member
+    get :expensive, on: :collection
+  end
 end

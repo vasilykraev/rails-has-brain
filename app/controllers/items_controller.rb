@@ -1,11 +1,16 @@
 class ItemsController < ApplicationController
 
-  before_filter :find_item, only: [:show, :edit, :update, :destroy]
+  before_filter :find_item, only: [:show, :edit, :update, :destroy, :upvote]
   before_filter :check_if_admin, only: [:edit, :update, :new, :create, :destroy]
 
   def index
     @items = Item.all
     # render text: @items.map { |i| "#{i.name}: #{i.price}"}.join("<br>")
+  end
+
+  def expensive
+    @items = Item.where("price > 1000")
+    render "index"
   end
 
   # /items/1 GET
@@ -47,6 +52,11 @@ class ItemsController < ApplicationController
   # /items/1 DELETE + workaround POST
   def destroy
     @item.destroy
+    redirect_to action: "index"
+  end
+
+  def upvote
+    @item.increment!(:votes_count)
     redirect_to action: "index"
   end
 
