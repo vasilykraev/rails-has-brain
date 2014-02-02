@@ -14,7 +14,7 @@ class ItemsController < ApplicationController
   end
 
   # /items/1 GET
-  def show
+  def showc
     unless @item
       render text: "404 Not found", status: 404
     end
@@ -66,12 +66,8 @@ private
   end
 
   def find_item
-    @item = Item.find(params[:id])
+    @item = Item.where(id: params[:id]).first
+    render_404 unless @item
   end
-
-  def check_if_admin
-    render text: "Access denied", status: 403 unless params[:admin]
-  end
-
 end
   
